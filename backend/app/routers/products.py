@@ -11,13 +11,16 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.get("", response_model=list[schemas.ProductOut])
 def all_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).order_by(models.Product.id.desc()).all()
+    products = db.query(models.Product).order_by(models.Product.id.desc()).all()
+    return [to_out(p) for p in products]
 
 @router.get("/{pid}", response_model=schemas.ProductOut)
 def one(pid: int, db: Session = Depends(get_db)):
     p = db.query(models.Product).filter(models.Product.id == pid).first()
-    if not p: raise HTTPException(404, "Not found")
-    return p
+    if not p:
+        raise HTTPException(404, "Not found")
+    return to_out(p)
+
 
 @router.post("", response_model=schemas.ProductOut)
 def create(data: schemas.ProductCreate, db: Session = Depends(get_db), _=Depends(require_admin)):
@@ -40,3 +43,18 @@ def upload_image(pid: int, file: UploadFile = File(...), db: Session = Depends(g
     p.image_url = f"/static/{filename}"
     db.commit()
     return {"imageUrl": p.image_url}
+
+
+
+
+
+def to_out(p):
+    return {
+        "id": p.id,
+        "title": p.title,
+        "brand": p.brand,
+        "price": float(p.price),
+        "type": p.type,
+        "description": p.description,
+        "image_url": f"/images/{p.image_id}" if p.image_id else ""
+    }

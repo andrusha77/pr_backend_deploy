@@ -10,15 +10,19 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     is_admin = Column(Boolean, default=False)
 
+from sqlalchemy import ForeignKey
+
 class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(120), nullable=False)
     brand = Column(String(80), nullable=False)
     price = Column(Numeric(10, 2), nullable=False)
-    type = Column(String(20), nullable=False)  # "Motorcycle" або "Part"
+    type = Column(String(20), nullable=False)
     description = Column(String(1000), default="")
-    image_url = Column(String(500), default="")
+
+    image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
+
 
 class Order(Base):
     __tablename__ = "orders"
@@ -42,3 +46,10 @@ class OrderItem(Base):
     quantity = Column(Integer, default=1)
 
     order = relationship("Order", back_populates="items")
+from sqlalchemy import LargeBinary
+
+class Image(Base):
+    __tablename__ = "images"
+    id = Column(Integer, primary_key=True, index=True)
+    content_type = Column(String(80), nullable=False, default="image/jpeg")
+    data = Column(LargeBinary, nullable=False)
