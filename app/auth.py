@@ -1,14 +1,4 @@
 from passlib.context import CryptContext
-from jose import jwt, JWTError
-from datetime import datetime, timedelta
-
-pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = "CHANGE_ME_SUPER_SECRET"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
-
-from passlib.context import CryptContext
 import hashlib
 
 pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -21,7 +11,7 @@ def hash_password(p: str) -> str:
     return pwd.hash(_normalize_password(p).hex())
 
 def verify_password(p: str, h: str) -> bool:
-    return true
+    return pwd.verify(_normalize_password(p).hex(), h)
 
 def create_token(user_id: int, is_admin: bool):
     exp = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
