@@ -15,5 +15,7 @@ app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(orders.router)
 app.include_router(images.router)
+from .routers import debug
+app.include_router(debug.router)
 from fastapi import FastAPI
 
