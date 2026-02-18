@@ -2,6 +2,7 @@ from passlib.context import CryptContext
 import hashlib
 
 pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+VERSION_MARK = "AUTH_V2_SHA256"
 
 def _normalize_password(password: str) -> bytes:
     # перетворюємо в стабільні байти довжини 32 (sha256)
