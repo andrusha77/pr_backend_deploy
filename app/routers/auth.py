@@ -16,7 +16,7 @@ def register(data: schemas.RegisterIn, db: Session = Depends(get_db)):
     if exists:
         raise HTTPException(400, "Username already exists")
     pwd_bytes = data.password.encode("utf-8")
-    if len(pwd_bytes) > 200:
+    if len(pwd_bytes) > 75:
         raise HTTPException(status_code=400, detail="Password too long")
     print("AUTH VERSION:", VERSION_MARK, "pw_len_bytes:", len(data.password.encode("utf-8")))
     user = models.User(username=data.username, password_hash=hash_password(data.password), is_admin=False)
